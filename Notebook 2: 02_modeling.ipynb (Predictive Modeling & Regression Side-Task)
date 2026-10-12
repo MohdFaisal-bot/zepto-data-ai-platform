@@ -1,0 +1,37 @@
+# [Cell 1] Load Offline Committed CSV & Train/Test Stratified Split
+import pandas as pd
+import numpy as np
+import joblib
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    roc_auc_score, roc_curve, confusion_matrix,
+    mean_absolute_error, mean_squared_error, r2_score
+)
+from imblearn.over_sampling import SMOTE
+
+# 1. Read from the committed offline fallback CSV
+df = pd.read_csv("titanic.csv")
+
+# Clean baseline rows missing target or critical identifiers
+df = df.dropna(subset=['survived'])
+
+features = ['pclass', 'sex', 'age', 'sibsp', 'parch', 'fare', 'embarked']
+X = df[features]
+y = df['survived']
+
+# Stratified Split (80/20) - Preserves ~38% positive survival balance across splits
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+print(f"Training set: {X_train.shape}, Test set: {X_test.shape}")
+print(f"Train survival rate: {y_train.mean():.4f}, Test survival rate: {y_test.mean():.4f}")
