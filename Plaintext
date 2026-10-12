@@ -1,0 +1,29 @@
+zepto-data-ai-platform/
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── data_pipeline/
+│   ├── README.md
+│   ├── scraper.py
+│   ├── pipeline.py
+│   └── zepto_catalog.db
+├── analytics/
+│   ├── README.md
+│   ├── titanic.csv
+│   ├── 01_eda.ipynb
+│   ├── 02_modeling.ipynb
+│   └── best_titanic_pipeline.joblib
+└── support_assistant/
+    ├── README.md
+    ├── Dockerfile
+    ├── main.py
+    ├── rag_graph.py
+    └── docs/
+        ├── doc_01.txt
+        ├── doc_02.txt
+        ├── doc_03.txt
+        ├── doc_04.txt
+        ├── doc_05.txt
+        ├── doc_06.txt
+        ├── doc_07.txt
+        └── doc_08.txt
