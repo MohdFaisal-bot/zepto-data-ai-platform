@@ -1,0 +1,13 @@
+# [Cell 6] Exploratory Standardization Sanity Check
+# EDA-stage sanity check: z = (x - mean) / std on the full dataset
+age_mean, age_std = df_cleaned['age'].mean(), df_cleaned['age'].std()
+fare_mean, fare_std = df_cleaned['fare'].mean(), df_cleaned['fare'].std()
+
+df_cleaned['age_zscore'] = (df_cleaned['age'] - age_mean) / age_std
+df_cleaned['fare_zscore'] = (df_cleaned['fare'] - fare_mean) / fare_std
+
+print("--- EDA Standardization Check ---")
+print(f"Age Before: Mean = {age_mean:.4f}, Std = {age_std:.4f}")
+print(f"Age After:  Mean = {df_cleaned['age_zscore'].mean():.4f}, Std = {df_cleaned['age_zscore'].std():.4f}")
+print(f"Fare Before: Mean = {fare_mean:.4f}, Std = {fare_std:.4f}")
+print(f"Fare After:  Mean = {df_cleaned['fare_zscore'].mean():.4f}, Std = {df_cleaned['fare_zscore'].std():.4f}")
