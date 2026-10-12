@@ -1,0 +1,27 @@
+# [Cell 5] Imbalance Handling Comparison (Baseline vs. class_weight vs. SMOTE)
+# Transformation fit on training fold only
+X_train_proc = preprocessor.fit_transform(X_train)
+X_test_proc = preprocessor.transform(X_test)
+
+# Variant A: Baseline Logistic Regression
+lr_base = LogisticRegression(random_state=42).fit(X_train_proc, y_train)
+y_pred_base = lr_base.predict(X_test_proc)
+
+# Variant B: class_weight='balanced'
+lr_balanced = LogisticRegression(class_weight='balanced', random_state=42).fit(X_train_proc, y_train)
+y_pred_balanced = lr_balanced.predict(X_test_proc)
+
+# Variant C: SMOTE applied strictly to training fold
+smote = SMOTE(random_state=42)
+X_train_smote, y_train_smote = smote.fit_resample(X_train_proc, y_train)
+lr_smote = LogisticRegression(random_state=42).fit(X_train_smote, y_train_smote)
+y_pred_smote = lr_smote.predict(X_test_proc)
+
+imbalance_df = pd.DataFrame({
+    "Strategy": ["Baseline", "class_weight='balanced'", "SMOTE (Train Only)"],
+    "Precision": [precision_score(y_test, y_pred_base), precision_score(y_test, y_pred_balanced), precision_score(y_test, y_pred_smote)],
+    "Recall": [recall_score(y_test, y_pred_base), recall_score(y_test, y_pred_balanced), recall_score(y_test, y_pred_smote)],
+    "F1-Score": [f1_score(y_test, y_pred_base), f1_score(y_test, y_pred_balanced), f1_score(y_test, y_pred_smote)]
+})
+print("--- Class Imbalance Mitigation Comparison ---")
+print(imbalance_df.to_string(index=False))
