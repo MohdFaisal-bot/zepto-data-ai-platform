@@ -1,0 +1,12 @@
+Component Breakdown
+Ingestion & Embedding: Handled by SentenceTransformer("all-MiniLM-L6-v2") reading from docs/doc_01.txt through docs/doc_08.txt inside rag_graph.py.
+
+Vector Index: Stored in a persistent local ChromaDB collection (zepto_policies) with cosine similarity indexing.
+
+Graph Orchestration: Implemented via LangGraph StateGraph, utilizing conditional routing (route_intent) based on detected intent.
+
+MOCK_LLM Toggle:
+
+MOCK_LLM=1 (Default Graded Baseline): Uses keyword heuristics for classification, retrieves real top-3 chunks from ChromaDB, formats the answer with the deterministic snippet template Based on the retrieved context: <snippet>, and sets confidence to 1.0.
+
+MOCK_LLM=0 (Optional Real LLM): Directs generation to Groq (llama3-8b-8192) using the 5-part structured prompt template with negative constraints and up to 2 retries for JSON validation.
