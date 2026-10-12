@@ -1,0 +1,19 @@
+# [Cell 6] Hyperparameter Tuning via GridSearchCV with OOB Score
+param_grid = {
+    'classifier__n_estimators': [50, 100, 200],
+    'classifier__max_depth': [4, 6, 8, None],
+    'classifier__max_features': ['sqrt', 'log2']
+}
+
+# Construct RandomForestClassifier with oob_score=True
+rf_base = RandomForestClassifier(random_state=42, oob_score=True)
+rf_tune_pipe = Pipeline(steps=[('preprocessor', preprocessor), ('classifier', rf_base)])
+
+grid_search = GridSearchCV(rf_tune_pipe, param_grid, cv=5, scoring='f1', n_jobs=-1)
+grid_search.fit(X_train, y_train)
+
+best_rf_model = grid_search.best_estimator_
+best_oob = best_rf_model.named_steps['classifier'].oob_score_
+
+print("GridSearchCV Best Parameters:", grid_search.best_params_)
+print(f"Random Forest Best Estimator OOB Score: {best_oob:.4f}")
