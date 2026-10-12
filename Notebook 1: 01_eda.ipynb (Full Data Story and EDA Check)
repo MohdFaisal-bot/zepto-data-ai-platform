@@ -1,0 +1,17 @@
+# [Cell 2] Defensive Missing Value Handling Decisions
+# Rule: <5% -> drop rows; 5%-30% -> impute; >30% -> drop column or encode category
+df_cleaned = raw_df.copy()
+
+# 'embarked' and 'embark_town': 0.22% missing (<5%) -> Drop affected rows
+df_cleaned = df_cleaned.dropna(subset=['embarked', 'embark_town'])
+
+# 'age': 19.87% missing (5%-30%) -> Median imputation by pclass and sex groups
+df_cleaned['age'] = df_cleaned.groupby(['pclass', 'sex'])['age'].transform(
+    lambda x: x.fillna(x.median())
+)
+
+# 'deck': 77.22% missing (>30%) -> Drop column due to severe sparsity
+df_cleaned = df_cleaned.drop(columns=['deck'])
+
+print("Cleaned DataFrame shape:", df_cleaned.shape)
+print("Remaining null values:\n", df_cleaned.isnull().sum())
