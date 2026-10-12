@@ -1,0 +1,32 @@
+# [Cell 4] Bivariate Analysis: Boolean Masking & 6x6 Correlation Matrix
+# Survival rates via boolean masking
+rate_female = df_cleaned[df_cleaned['sex'] == 'female']['survived'].mean()
+rate_male = df_cleaned[df_cleaned['sex'] == 'male']['survived'].mean()
+
+rate_p1 = df_cleaned[df_cleaned['pclass'] == 1]['survived'].mean()
+rate_p2 = df_cleaned[df_cleaned['pclass'] == 2]['survived'].mean()
+rate_p3 = df_cleaned[df_cleaned['pclass'] == 3]['survived'].mean()
+
+rate_f_p1 = df_cleaned[(df_cleaned['sex'] == 'female') & (df_cleaned['pclass'] == 1)]['survived'].mean()
+rate_m_p3 = df_cleaned[(df_cleaned['sex'] == 'male') & (df_cleaned['pclass'] == 3)]['survived'].mean()
+
+print(f"Survival Rate by Sex: Female = {rate_female:.4f}, Male = {rate_male:.4f}")
+print(f"Survival Rate by Pclass: Class 1 = {rate_p1:.4f}, Class 2 = {rate_p2:.4f}, Class 3 = {rate_p3:.4f}")
+print(f"Survival Rate (Female & Class 1): {rate_f_p1:.4f}")
+print(f"Survival Rate (Male & Class 3): {rate_m_p3:.4f}")
+
+# 6x6 Correlation Matrix (excluding adult_male and alone)
+corr_cols = ['survived', 'pclass', 'age', 'sibsp', 'parch', 'fare']
+corr_matrix = df_cleaned[corr_cols].corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".3f", vmin=-1, vmax=1)
+plt.title("6x6 Correlation Matrix Heatmap")
+plt.savefig("correlation_heatmap.png")
+plt.show()
+
+# Find top two off-diagonal correlations
+corr_unstacked = corr_matrix.abs().unstack()
+corr_pairs = corr_unstacked[corr_unstacked < 1.0].drop_duplicates().sort_values(ascending=False)
+print("Top 2 Off-Diagonal Absolute Correlations:")
+print(corr_pairs.head(2))
