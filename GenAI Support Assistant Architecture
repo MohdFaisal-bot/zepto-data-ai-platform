@@ -1,0 +1,20 @@
+[User HTTP POST /ask]
+         │
+         ▼
+[Node 1: classify_intent] ──── (Keyword Heuristic / Mock LLM)
+         │
+         ├──────────────────────────────┐
+         ▼ (policy_question)            ▼ (general_question)
+[Node 2: retrieve_and_answer]   [Node 3: direct_answer]
+  ├── Local Embeddings            └── Fixed Canned Response
+  │   (all-MiniLM-L6-v2)
+  ├── ChromaDB Vector Search
+  │   (Top-3 Cosine Similarity)
+  └── Answer Generation
+      (MOCK: Canned Template /
+       REAL: Groq LLM + Retries)
+         │                              │
+         └──────────────┬───────────────┘
+                        ▼
+           [Pydantic QueryResponse]
+           └── answer, sources, confidence
