@@ -1,0 +1,24 @@
+# [Cell 5] Multivariate Data Story (4 Distinct Visualizations)
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+# Chart 1: Survival Rate by Sex and Pclass
+sns.barplot(data=df_cleaned, x='pclass', y='survived', hue='sex', ci=None, ax=axes[0, 0], palette='Set2')
+axes[0, 0].set_title("Chart 1: Survival Probability by Sex and Passenger Class")
+axes[0, 0].set_ylabel("Survival Rate")
+
+# Chart 2: Fare Distribution across Pclass and Survival
+sns.boxplot(data=df_cleaned, x='pclass', y='fare', hue='survived', ax=axes[0, 1], palette='Pastel1', showfliers=False)
+axes[0, 1].set_title("Chart 2: Fare by Pclass and Survival (Outliers Hidden)")
+
+# Chart 3: Age vs Fare Scatter with Survival
+sns.scatterplot(data=df_cleaned, x='age', y='fare', hue='survived', alpha=0.7, ax=axes[1, 0], palette='coolwarm')
+axes[1, 0].set_title("Chart 3: Passenger Age vs Fare by Survival Status")
+
+# Chart 4: Family Size vs Survival Rate
+df_cleaned['family_size'] = df_cleaned['sibsp'] + df_cleaned['parch']
+sns.pointplot(data=df_cleaned, x='family_size', y='survived', ax=axes[1, 1], color='darkslateblue')
+axes[1, 1].set_title("Chart 4: Family Size vs Survival Rate")
+
+plt.tight_layout()
+plt.savefig("multivariate_data_story.png")
+plt.show()
