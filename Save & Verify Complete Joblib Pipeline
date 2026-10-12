@@ -1,0 +1,22 @@
+# [Cell 8] Save & Verify Complete Joblib Pipeline
+final_pipeline = best_rf_model
+model_artifact = "best_titanic_pipeline.joblib"
+joblib.dump(final_pipeline, model_artifact)
+print(f"Saved complete end-to-end fitted pipeline to {model_artifact}")
+
+# Verify reloadability on raw unpreprocessed data
+loaded_pipe = joblib.load(model_artifact)
+sample_raw_input = pd.DataFrame([{
+    'pclass': 3,
+    'sex': 'male',
+    'age': 22.0,
+    'sibsp': 1,
+    'parch': 0,
+    'fare': 7.25,
+    'embarked': 'S'
+}])
+
+prediction = loaded_pipe.predict(sample_raw_input)
+proba = loaded_pipe.predict_proba(sample_raw_input)
+print("Reload Verification on Raw Record:")
+print(f"Predicted Class: {prediction[0]}, Survival Probability: {proba[0][1]:.4f}")
