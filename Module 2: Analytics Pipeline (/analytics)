@@ -1,0 +1,31 @@
+Module 2 is organized into two sequential Jupyter Notebooks sharing the committed titanic.csv fallback file.
+Notebook 1: 01_eda.ipynb (Full Data Story and EDA Check)
+# [Cell 1] Load, Commit Offline Fallback, and Profile
+import os
+import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+csv_path = "titanic.csv"
+if not os.path.exists(csv_path):
+    raw_df = sns.load_dataset("titanic")
+    raw_df.to_csv(csv_path, index=False)
+    print("Fetched via sns.load_dataset and saved offline fallback to titanic.csv")
+else:
+    raw_df = pd.read_csv(csv_path)
+    print("Loaded from committed offline fallback titanic.csv")
+
+print("--- DataFrame Info ---")
+print(raw_df.info())
+print("\n--- DataFrame Summary Stats ---")
+print(raw_df.describe())
+print(f"\nDataFrame Shape: {raw_df.shape}")
+
+# Missing value calculation
+missing_series = (raw_df.isnull().sum() / len(raw_df)) * 100
+missing_df = missing_series[missing_series > 0].reset_index()
+missing_df.columns = ["Column", "Missing_Percentage"]
+print("\n--- Missing Value Percentages ---")
+for _, r in missing_df.iterrows():
+    print(f"{r['Column']}: {r['Missing_Percentage']:.2f}%")
