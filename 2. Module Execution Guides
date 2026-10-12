@@ -1,0 +1,3 @@
+cd data_pipeline
+python pipeline.py
+Artifacts generated: zepto_catalog.db.Verification: Scrapes $\ge 60$ books, cleans records, applies the baseline project exchange rate ($1\text{ GBP} = 105.50\text{ INR}$), populates normalized tables (categories and books), executes 5 required SQL queries, and confirms pd.read_sql and pd.merge output equivalence.
