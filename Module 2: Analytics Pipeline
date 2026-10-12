@@ -1,0 +1,4 @@
+cd analytics
+# Run 01_eda.ipynb and 02_modeling.ipynb using Jupyter:
+jupyter notebook
+Artifacts: titanic.csv (committed offline fallback), plots (univariate_analysis.png, correlation_heatmap.png, multivariate_data_story.png, roc_curves.png, decision_tree_plot.png, residual_plot.png), and best_titanic_pipeline.joblib.
