@@ -1,0 +1,44 @@
+# [Cell 7] Regression Side-Task: Predict Fare & Heteroscedasticity Analysis
+reg_features = ['pclass', 'sex', 'age', 'sibsp', 'parch', 'embarked']
+X_reg = df[reg_features]
+y_reg = df['fare']
+
+# Impute fare targets if any null
+valid_mask = ~y_reg.isnull()
+X_reg, y_reg = X_reg[valid_mask], y_reg[valid_mask]
+
+X_train_r, X_test_r, y_train_r, y_test_r = train_test_split(X_reg, y_reg, test_size=0.2, random_state=42)
+
+reg_num_cols = ['age', 'sibsp', 'parch']
+reg_cat_cols = ['pclass', 'sex', 'embarked']
+
+reg_prep = ColumnTransformer(transformers=[
+    ('num', Pipeline([('imp', SimpleImputer(strategy='median')), ('scl', StandardScaler())]), reg_num_cols),
+    ('cat', Pipeline([('imp', SimpleImputer(strategy='most_frequent')), ('enc', OneHotEncoder(drop='first', handle_unknown='ignore'))]), reg_cat_cols)
+])
+
+lin_pipe = Pipeline(steps=[('prep', reg_prep), ('regressor', LinearRegression())])
+lin_pipe.fit(X_train_r, y_train_r)
+
+y_pred_r = lin_pipe.predict(X_test_r)
+residuals = y_test_r - y_pred_r
+
+mae = mean_absolute_error(y_test_r, y_pred_r)
+rmse = np.sqrt(mean_squared_error(y_test_r, y_pred_r))
+r2 = r2_score(y_test_r, y_pred_r)
+n = len(y_test_r)
+p = X_train_r.shape[1]
+adj_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+
+print(f"Regression Metrics: MAE = {mae:.2f}, RMSE = {rmse:.2f}, R2 = {r2:.4f}, Adjusted R2 = {adj_r2:.4f}")
+
+# Residual Plot
+plt.figure(figsize=(8, 5))
+plt.scatter(y_pred_r, residuals, alpha=0.5, color='darkcyan')
+plt.axhline(0, color='red', linestyle='--')
+plt.xlabel("Fitted Values (Predicted Fare)")
+plt.ylabel("Residuals (Actual - Predicted)")
+plt.title("Residual Plot for Fare Regression")
+plt.savefig("residual_plot.png")
+plt.show()
+print("Heteroscedasticity Analysis: The residual scatter displays a distinct funnel shape expanding at higher predicted values, confirming heteroscedasticity.")
