@@ -1,0 +1,19 @@
+# 1. Initialize repo and initial commit
+git init
+git checkout -b main
+git add .
+git commit -m "chore: initial project scaffolding"
+
+# 2. Create a feature branch
+git checkout -b feature/data-pipeline-normalization
+
+# 3. Commit at least twice on the feature branch
+git add data_pipeline/scraper.py
+git commit -m "feat(data_pipeline): implement scraping and BeautifulSoup extraction"
+
+git add data_pipeline/pipeline.py
+git commit -m "feat(data_pipeline): add sqlite schema normalization and pandas merge verification"
+
+# 4. Merge back into main
+git checkout main
+git merge --no-ff feature/data-pipeline-normalization -m "merge: integrate data pipeline into main"
